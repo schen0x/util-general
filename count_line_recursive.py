@@ -5,18 +5,10 @@ import fileinput
 def countLinesRecursive(path: str, ignorePathRegex: list):
     '''
     Search and count total line number.
-
-    path = '../volatile'
-
-    ignorePathRegex = """
-    node_module
-    """
-
-    replaceStr = """
-       b() {
-           c
-       }
-    """
+    Example: countLinesRecursive("./", ["LICENSE", ".git"])
+    Params:
+        path = '../volatile'
+        ignorePathRegex = ["regex1", "regex2", ...]
     '''
 
     s = path[-1]
