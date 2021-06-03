@@ -2,7 +2,7 @@
 import os
 import re
 
-def countLinesRecursive(path: str, ignore: str):
+def countLinesRecursive(pathRaw: str, ignore: str):
     '''
     Search and count total line number.
     Example: countLinesRecursive("./", ["LICENSE", ".git"])
@@ -13,8 +13,10 @@ def countLinesRecursive(path: str, ignore: str):
             node_module
         """
     '''
-    path = path.replace("/", re.escape(os.sep))
-    path = path.replace("\\", re.escape(os.sep))
+    path = pathRaw
+    if (os.sep != "/"):
+        path = pathRaw.replace(os.sep, '/')
+        path = re.sub("/+", "/", path)
 
     # dir
     if os.path.isdir(path):
@@ -49,12 +51,20 @@ def count_lines(filePath: str):
     print(filePath + ": non-empty-lines " + str(lines_count))
     return lines_count
 
-def _shouldIgnore(path: str, ignore: str):
+def _shouldIgnore(pathRaw: str, ignoreRaw: str):
     '''
         return: True if should be ignored
     '''
-    ignore = ignore.replace("/", re.escape(os.sep))
-    ignore = ignore.replace("\\", re.escape(os.sep))
+    ignore = ignoreRaw
+    path = pathRaw
+
+    if (os.sep != "/"):
+        ignore = ignore.replace(os.sep, '/')
+        path = path.replace(os.sep, '/')
+
+    ignore = re.sub("/+", "/", ignore)
+    path = re.sub("/+", "/", path)
+
     ignorePathRegex = ignore.split("\n")
     for i in ignorePathRegex:
         pattern = i.strip()
@@ -62,8 +72,6 @@ def _shouldIgnore(path: str, ignore: str):
             continue
         if re.search(pattern, path):
             # if match, ignore
-            print(path)
-            print(pattern)
             return True
     return False
     
