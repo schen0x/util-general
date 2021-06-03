@@ -14,10 +14,7 @@ def countLinesRecursive(pathRaw: str, ignore: str):
             node_module
         """
     '''
-    path = pathRaw
-    if (os.sep != "/"):
-        path = pathRaw.replace(os.sep, '/')
-        path = re.sub("/+", "/", path)
+    path = pathFormatter(pathRaw)
 
     # dir
     if os.path.isdir(path):
@@ -27,7 +24,7 @@ def countLinesRecursive(pathRaw: str, ignore: str):
             path = path[0:-1]
         path += os.sep
 
-        if _shouldIgnore(path, ignore):
+        if __shouldIgnore(path, ignore):
             return 0
 
         for fileName in os.listdir(path):
@@ -36,12 +33,19 @@ def countLinesRecursive(pathRaw: str, ignore: str):
         return dir_line_counter
 
     # file
-    if _shouldIgnore(path, ignore):
+    if __shouldIgnore(path, ignore):
         return 0
 
-    return count_lines(path)
+    return countLines(path)
 
-def count_lines(filePath: str):
+def pathFormatter(pathLikeStr: str) -> str:
+    path = pathLikeStr
+    if (os.sep != "/"):
+        path = pathLikeStr.replace(os.sep, '/')
+        path = re.sub("/+", "/", path)
+    return path
+
+def countLines(filePath: str):
     lines_count = 0
     with open(filePath, 'rb') as f:
         content = f.read()
@@ -52,19 +56,12 @@ def count_lines(filePath: str):
     print(filePath + ": non-empty-lines " + str(lines_count))
     return lines_count
 
-def _shouldIgnore(pathRaw: str, ignoreRaw: str):
+def __shouldIgnore(pathRaw: str, ignoreRaw: str):
     '''
         return: True if should be ignored
     '''
-    ignore = ignoreRaw
-    path = pathRaw
-
-    if (os.sep != "/"):
-        ignore = ignore.replace(os.sep, '/')
-        path = path.replace(os.sep, '/')
-
-    ignore = re.sub("/+", "/", ignore)
-    path = re.sub("/+", "/", path)
+    path = pathFormatter(pathRaw)
+    ignore = pathFormatter(ignoreRaw)
 
     ignorePathRegex = ignore.split("\n")
     for i in ignorePathRegex:
