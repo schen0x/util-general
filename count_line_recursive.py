@@ -4,8 +4,9 @@ import re
 
 def countLinesRecursive(pathRaw: str, ignore: str):
     '''
-    Search and count total line number.
-    Example: countLinesRecursive("./", ["LICENSE", ".git"])
+    Print total none-empty line counts for all and each file in the path.
+
+    Example: countLinesRecursive("./", ignore)
     Params:
         path = '../volatile'
         ignore = """
