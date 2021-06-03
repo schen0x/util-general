@@ -13,8 +13,8 @@ def countLinesRecursive(path: str, ignore: str):
             node_module
         """
     '''
-    path = path.replace("/", os.sep)
-    path = path.replace("\\", os.sep)
+    path = path.replace("/", re.escape(os.sep))
+    path = path.replace("\\", re.escape(os.sep))
 
     # dir
     if os.path.isdir(path):
@@ -53,6 +53,8 @@ def _shouldIgnore(path: str, ignore: str):
     '''
         return: True if should be ignored
     '''
+    ignore = ignore.replace("/", re.escape(os.sep))
+    ignore = ignore.replace("\\", re.escape(os.sep))
     ignorePathRegex = ignore.split("\n")
     for i in ignorePathRegex:
         pattern = i.strip()
